@@ -41,6 +41,6 @@ class Course extends Model
 
     public function topics(): HasMany
     {
-        return $this->hasMany(Topic::class)->orderBy('order');
+        return $this->hasMany(Topic::class)->orderBy('order')->orderBy('id');
     }
 }
