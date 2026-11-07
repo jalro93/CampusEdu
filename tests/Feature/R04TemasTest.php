@@ -33,7 +33,7 @@ class R04TemasTest extends TestCase
         $this->assertSame(1, $course->topics()->count());
     }
 
-    public function test_R04F01T01P02_los_temas_nuevos_se_colocan_al_final(): void
+    public function test_R04F01T01P01_los_temas_nuevos_se_colocan_al_final(): void
     {
         $user = User::factory()->create();
         $course = $this->cursoDe($user, 'profesor');
@@ -45,7 +45,7 @@ class R04TemasTest extends TestCase
         $this->assertSame([0, 1], $course->topics()->pluck('order')->all());
     }
 
-    public function test_R04F01T02P01_el_titulo_es_obligatorio_y_maximo_255_caracteres(): void
+    public function test_R04F01T01P01_el_titulo_es_obligatorio_y_maximo_255_caracteres(): void
     {
         $user = User::factory()->create();
         $course = $this->cursoDe($user, 'profesor');
@@ -57,7 +57,7 @@ class R04TemasTest extends TestCase
         $this->assertSame(1, Topic::count());
     }
 
-    public function test_R04F01T03P01_profesor_edita_un_tema(): void
+    public function test_R04F01T01P01_profesor_edita_un_tema(): void
     {
         $user = User::factory()->create();
         $course = $this->cursoDe($user, 'profesor');
@@ -70,7 +70,7 @@ class R04TemasTest extends TestCase
         $this->assertDatabaseHas('topics', ['id' => $topic->id, 'title' => 'Título nuevo']);
     }
 
-    public function test_R04F01T04P01_profesor_elimina_un_tema(): void
+    public function test_R04F01T01P01_profesor_elimina_un_tema(): void
     {
         $user = User::factory()->create();
         $course = $this->cursoDe($user, 'profesor');
@@ -81,7 +81,7 @@ class R04TemasTest extends TestCase
         $this->assertModelMissing($topic);
     }
 
-    public function test_R04F01T05P01_profesor_reordena_los_temas_con_subir_y_bajar(): void
+    public function test_R04F01T01P01_profesor_reordena_los_temas_con_subir_y_bajar(): void
     {
         $user = User::factory()->create();
         $course = $this->cursoDe($user, 'profesor');
@@ -101,7 +101,7 @@ class R04TemasTest extends TestCase
         $this->assertSame([0, 1, 2], $course->topics()->pluck('order')->all());
     }
 
-    public function test_R04F01T06P01_courses_show_lista_los_temas_en_orden(): void
+    public function test_R04F01T01P01_courses_show_lista_los_temas_en_orden(): void
     {
         $user = User::factory()->create();
         $course = $this->cursoDe($user, 'alumno');
@@ -114,7 +114,7 @@ class R04TemasTest extends TestCase
             ->assertSeeInOrder(['Tema Primero', 'Tema Segundo', 'Tema Tercero']);
     }
 
-    public function test_R04F01T07P01_alumno_no_puede_crear_editar_borrar_ni_reordenar(): void
+    public function test_R04F01T01P01_alumno_no_puede_crear_editar_borrar_ni_reordenar(): void
     {
         $user = User::factory()->create();
         $course = $this->cursoDe($user, 'alumno');
@@ -133,7 +133,7 @@ class R04TemasTest extends TestCase
         $this->assertDatabaseHas('topics', ['id' => $other->id, 'order' => 1]);
     }
 
-    public function test_R04F01T07P02_profesor_de_otro_curso_no_puede_gestionar_temas_ajenos(): void
+    public function test_R04F01T01P01_profesor_de_otro_curso_no_puede_gestionar_temas_ajenos(): void
     {
         $user = User::factory()->create();
         $this->cursoDe($user, 'profesor');
@@ -147,7 +147,7 @@ class R04TemasTest extends TestCase
         $this->assertDatabaseMissing('topics', ['title' => 'Intruso']);
     }
 
-    public function test_R04F01T08P01_un_tema_no_se_abre_desde_la_url_de_otro_curso(): void
+    public function test_R04F01T01P01_un_tema_no_se_abre_desde_la_url_de_otro_curso(): void
     {
         $user = User::factory()->create();
         $mine = $this->cursoDe($user, 'profesor');
@@ -162,7 +162,7 @@ class R04TemasTest extends TestCase
         $this->assertDatabaseHas('topics', ['id' => $topic->id, 'title' => 'Del otro curso', 'course_id' => $other->id]);
     }
 
-    public function test_R04F01T09P01_invitado_es_redirigido_al_login(): void
+    public function test_R04F01T01P01_invitado_es_redirigido_al_login(): void
     {
         $course = Course::factory()->create();
         $topic = Topic::factory()->create(['course_id' => $course->id]);
@@ -175,7 +175,7 @@ class R04TemasTest extends TestCase
         $this->patch("/courses/{$course->slug}/topics/{$topic->id}/move/up")->assertRedirect('/login');
     }
 
-    public function test_R04F01T10P01_alumno_ve_los_temas_pero_no_los_botones_de_gestion(): void
+    public function test_R04F01T01P01_alumno_ve_los_temas_pero_no_los_botones_de_gestion(): void
     {
         $student = User::factory()->create();
         $teacher = User::factory()->create();
