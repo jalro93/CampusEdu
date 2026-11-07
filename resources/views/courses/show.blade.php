@@ -41,6 +41,50 @@
                 </ul>
             </div>
 
+            <div class="mt-6 p-6 bg-white shadow-sm sm:rounded-lg">
+                <div class="flex items-center justify-between">
+                    <h3 class="font-medium text-gray-900">Temas</h3>
+                    @can('create', [\App\Models\Topic::class, $course])
+                        <a href="{{ route('courses.topics.create', $course) }}">
+                            <x-secondary-button type="button">Nuevo tema</x-secondary-button>
+                        </a>
+                    @endcan
+                </div>
+
+                @forelse ($topics as $topic)
+                    <div class="mt-3 flex items-center justify-between border-t pt-3">
+                        <span class="text-gray-800">{{ $loop->iteration }}. {{ $topic->title }}</span>
+                        @can('update', $topic)
+                            <div class="flex items-center gap-3 text-sm">
+                                @unless ($loop->first)
+                                    <form method="POST" action="{{ route('courses.topics.move', [$course, $topic, 'up']) }}">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="text-gray-600 hover:text-gray-900" title="Subir" aria-label="Subir tema">↑</button>
+                                    </form>
+                                @endunless
+                                @unless ($loop->last)
+                                    <form method="POST" action="{{ route('courses.topics.move', [$course, $topic, 'down']) }}">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="text-gray-600 hover:text-gray-900" title="Bajar" aria-label="Bajar tema">↓</button>
+                                    </form>
+                                @endunless
+                                <a href="{{ route('courses.topics.edit', [$course, $topic]) }}" class="text-indigo-600 hover:text-indigo-900 underline">Editar</a>
+                                <form method="POST" action="{{ route('courses.topics.destroy', [$course, $topic]) }}"
+                                      onsubmit="return confirm('¿Eliminar este tema?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-600 hover:text-red-800 underline">Eliminar</button>
+                                </form>
+                            </div>
+                        @endcan
+                    </div>
+                @empty
+                    <p class="mt-3 text-sm text-gray-500">Este curso todavía no tiene temas.</p>
+                @endforelse
+            </div>
+
             <a href="{{ route('courses.index') }}" class="mt-4 inline-block text-sm text-gray-600 hover:text-gray-900 underline">← Volver a mis cursos</a>
         </div>
     </div>
