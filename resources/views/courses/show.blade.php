@@ -80,6 +80,18 @@
                             </div>
                         @endcan
                     </div>
+                    <ul class="mt-2 ms-6 space-y-1 text-sm">
+                        @foreach ($topic->lessons as $lesson)
+                            <li>
+                                <a href="{{ route('courses.topics.lessons.show', [$course, $topic, $lesson]) }}" class="text-indigo-600 hover:text-indigo-900 underline">{{ $lesson->title }}</a>
+                            </li>
+                        @endforeach
+                        @can('create', [\App\Models\Lesson::class, $topic])
+                            <li>
+                                <a href="{{ route('courses.topics.lessons.create', [$course, $topic]) }}" class="text-gray-600 hover:text-gray-900 underline">+ Añadir lección</a>
+                            </li>
+                        @endcan
+                    </ul>
                 @empty
                     <p class="mt-3 text-sm text-gray-500">Este curso todavía no tiene temas.</p>
                 @endforelse

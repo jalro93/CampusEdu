@@ -54,7 +54,7 @@ class CourseController extends Controller
         $role = $request->user()->roleIn($course);
         $teachers = $course->users()->wherePivot('role', 'profesor')->orderBy('name')->get();
 
-        $topics = $course->topics;
+        $topics = $course->topics()->with('lessons')->get();
 
         return view('courses.show', compact('course', 'role', 'teachers', 'topics'));
     }

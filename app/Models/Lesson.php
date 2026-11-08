@@ -2,13 +2,18 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\HtmlString;
+use Illuminate\Support\Str;
 
 class Lesson extends Model
 {
+    use HasFactory;
+
     protected $fillable = ['topic_id', 'title', 'content', 'video_url', 'order'];
 
     public function topic(): BelongsTo
@@ -24,5 +29,19 @@ class Lesson extends Model
     public function completedBy(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'lesson_progress')->withPivot('completed_at');
+    }
+
+    /**
+     * Contenido de la lección en HTML seguro (R04F02).
+     * El texto se guarda como Markdown. Al mostrarlo se descarta cualquier HTML
+     * escrito a mano y se bloquean los enlaces peligrosos (javascript:, etc.),
+     * de modo que el contenido no puede ejecutar código en el navegador.
+     */
+    public function renderedContent(): HtmlString
+    {
+        return new HtmlString(Str::markdown($this->content ?? '', [
+            'html_input' => 'strip',
+            'allow_unsafe_links' => false,
+        ]));
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\LessonController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TopicController;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +27,9 @@ Route::middleware('auth')->group(function () {
         ->whereIn('direction', ['up', 'down'])
         ->scopeBindings()
         ->name('courses.topics.move');
+
+    // Lecciones anidadas en el tema: cada lección solo se resuelve desde SU tema y SU curso.
+    Route::resource('courses.topics.lessons', LessonController::class)->except(['index'])->scoped();
 });
 
 require __DIR__.'/auth.php';
