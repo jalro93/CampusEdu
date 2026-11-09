@@ -28,9 +28,17 @@
             @endif
 
             <div class="p-6 bg-white shadow-sm sm:rounded-lg">
+                @if ($embed = $lesson->videoEmbedUrl())
+                    <div class="aspect-video mb-6">
+                        <iframe src="{{ $embed }}" title="Vídeo de la lección" class="w-full h-full rounded-md" loading="lazy" allowfullscreen
+                                allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
+                                referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                    </div>
+                @endif
+
                 @if (filled($lesson->content))
                     <div class="contenido-leccion text-gray-800">{{ $lesson->renderedContent() }}</div>
-                @else
+                @elseif (! $embed)
                     <p class="text-gray-500">Esta lección todavía no tiene contenido.</p>
                 @endif
             </div>
