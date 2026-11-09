@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Support\VideoEmbed;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -20,6 +21,11 @@ class LessonRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:255'],
             'content' => ['nullable', 'string', 'max:20000'],
+            'video_url' => ['nullable', 'string', 'max:255', function (string $attribute, mixed $value, \Closure $fail) {
+                if (VideoEmbed::embedUrl($value) === null) {
+                    $fail('El enlace del vídeo debe ser una dirección https de YouTube o de Bunny.net.');
+                }
+            }],
         ];
     }
 
@@ -28,6 +34,7 @@ class LessonRequest extends FormRequest
         return [
             'title' => 'título',
             'content' => 'contenido',
+            'video_url' => 'enlace del vídeo',
         ];
     }
 }

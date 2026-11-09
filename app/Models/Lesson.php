@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\VideoEmbed;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -43,5 +44,11 @@ class Lesson extends Model
             'html_input' => 'strip',
             'allow_unsafe_links' => false,
         ]));
+    }
+
+    /** URL de incrustación del vídeo (YouTube o Bunny.net), o null si no hay vídeo válido. */
+    public function videoEmbedUrl(): ?string
+    {
+        return VideoEmbed::embedUrl($this->video_url);
     }
 }
