@@ -17,6 +17,12 @@ class Lesson extends Model
 
     protected $fillable = ['topic_id', 'title', 'content', 'video_url', 'order'];
 
+    /** Al borrar, se borran uno a uno los hijos para que también se eliminen los archivos de los recursos. */
+    protected static function booted(): void
+    {
+        static::deleting(fn (Lesson $lesson) => $lesson->resources->each->delete());
+    }
+
     public function topic(): BelongsTo
     {
         return $this->belongsTo(Topic::class);
