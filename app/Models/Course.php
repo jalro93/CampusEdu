@@ -14,6 +14,12 @@ class Course extends Model
 
     protected $fillable = ['title', 'slug', 'description'];
 
+    /** Al borrar, se borran uno a uno los hijos para que también se eliminen los archivos de los recursos. */
+    protected static function booted(): void
+    {
+        static::deleting(fn (Course $course) => $course->topics->each->delete());
+    }
+
     /** Las rutas usan el slug (único) en lugar del identificador numérico. */
     public function getRouteKeyName(): string
     {

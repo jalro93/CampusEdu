@@ -13,6 +13,12 @@ class Topic extends Model
 
     protected $fillable = ['course_id', 'title', 'order'];
 
+    /** Al borrar, se borran uno a uno los hijos para que también se eliminen los archivos de los recursos. */
+    protected static function booted(): void
+    {
+        static::deleting(fn (Topic $topic) => $topic->lessons->each->delete());
+    }
+
     public function course(): BelongsTo
     {
         return $this->belongsTo(Course::class);
