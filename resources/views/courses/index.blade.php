@@ -28,7 +28,7 @@
                 </a>
             @empty
                 <div class="p-6 bg-white shadow-sm sm:rounded-lg text-gray-600">
-                    Todavía no participas en ningún curso.
+                    Todavía no participas en ningún curso. Puedes crear uno o <a href="{{ route('catalog.index') }}" class="text-indigo-600 hover:text-indigo-900 underline">solicitar matrícula en el catálogo</a>.
                 </div>
             @endforelse
         </div>

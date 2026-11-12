@@ -3,7 +3,9 @@
 namespace App\Models\Concerns;
 
 use App\Models\Course;
+use App\Models\EnrollmentRequest;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * R02: el rol (profesor | alumno) vive en la tabla pivote course_user,
@@ -14,6 +16,12 @@ trait HasCourseRoles
     public function courses(): BelongsToMany
     {
         return $this->belongsToMany(Course::class)->withPivot('role')->withTimestamps();
+    }
+
+    /** Solicitudes de matrícula que ha hecho el usuario (R05). */
+    public function enrollmentRequests(): HasMany
+    {
+        return $this->hasMany(EnrollmentRequest::class);
     }
 
     public function roleIn(Course $course): ?string

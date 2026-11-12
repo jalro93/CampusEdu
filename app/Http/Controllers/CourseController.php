@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CourseRequest;
 use App\Models\Course;
+use App\Models\EnrollmentRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -56,7 +57,12 @@ class CourseController extends Controller
 
         $topics = $course->topics()->with('lessons')->get();
 
-        return view('courses.show', compact('course', 'role', 'teachers', 'topics'));
+        // Solo el profesor del curso ve las solicitudes de matrícula pendientes.
+        $pendingRequests = $request->user()->teachesCourse($course)
+            ? $course->enrollmentRequests()->where('status', EnrollmentRequest::PENDING)->with('user')->oldest()->get()
+            : collect();
+
+        return view('courses.show', compact('course', 'role', 'teachers', 'topics', 'pendingRequests'));
     }
 
     public function edit(Course $course): View
