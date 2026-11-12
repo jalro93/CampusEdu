@@ -45,6 +45,11 @@ class Course extends Model
         return $this->belongsToMany(User::class)->withPivot('role')->withTimestamps();
     }
 
+    public function enrollmentRequests(): HasMany
+    {
+        return $this->hasMany(EnrollmentRequest::class);
+    }
+
     public function topics(): HasMany
     {
         return $this->hasMany(Topic::class)->orderBy('order')->orderBy('id');

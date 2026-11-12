@@ -41,6 +41,29 @@
                 </ul>
             </div>
 
+            @if ($pendingRequests->isNotEmpty())
+                <div class="mt-6 p-6 bg-white shadow-sm sm:rounded-lg">
+                    <h3 class="font-medium text-gray-900">Solicitudes de matrícula pendientes</h3>
+                    @foreach ($pendingRequests as $solicitud)
+                        <div class="mt-3 flex items-center justify-between gap-4 border-t pt-3 text-sm">
+                            <span class="text-gray-800">{{ $solicitud->user->name }} <span class="text-gray-500">({{ $solicitud->user->email }})</span></span>
+                            <div class="flex items-center gap-3">
+                                <form method="POST" action="{{ route('courses.enrollment-requests.approve', [$course, $solicitud]) }}">
+                                    @csrf
+                                    @method('PATCH')
+                                    <x-primary-button>Aprobar</x-primary-button>
+                                </form>
+                                <form method="POST" action="{{ route('courses.enrollment-requests.reject', [$course, $solicitud]) }}">
+                                    @csrf
+                                    @method('PATCH')
+                                    <x-secondary-button type="submit">Rechazar</x-secondary-button>
+                                </form>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
+
             <div class="mt-6 p-6 bg-white shadow-sm sm:rounded-lg">
                 <div class="flex items-center justify-between">
                     <h3 class="font-medium text-gray-900">Temas</h3>
