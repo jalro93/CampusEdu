@@ -31,6 +31,7 @@ class EnrollmentRequestController extends Controller
         Gate::authorize('decide', $enrollmentRequest);
 
         DB::transaction(function () use ($course, $enrollmentRequest) {
+            $this->bloquearPendiente($enrollmentRequest);
             $course->users()->syncWithoutDetaching([$enrollmentRequest->user_id => ['role' => 'alumno']]);
             $enrollmentRequest->update(['status' => EnrollmentRequest::APPROVED]);
         });
@@ -42,8 +43,22 @@ class EnrollmentRequestController extends Controller
     {
         Gate::authorize('decide', $enrollmentRequest);
 
-        $enrollmentRequest->update(['status' => EnrollmentRequest::REJECTED]);
+        DB::transaction(function () use ($enrollmentRequest) {
+            $this->bloquearPendiente($enrollmentRequest);
+            $enrollmentRequest->update(['status' => EnrollmentRequest::REJECTED]);
+        });
 
         return redirect()->route('courses.show', $course)->with('status', 'Solicitud rechazada.');
+    }
+
+    /**
+     * Relee la solicitud bloqueando su fila (MySQL; SQLite lo ignora) y comprueba que sigue pendiente,
+     * para que dos decisiones simultáneas no dejen un estado incoherente con la matrícula.
+     */
+    private function bloquearPendiente(EnrollmentRequest $enrollmentRequest): void
+    {
+        $actual = EnrollmentRequest::whereKey($enrollmentRequest->getKey())->lockForUpdate()->first();
+
+        abort_unless($actual?->isPending(), 403);
     }
 }
