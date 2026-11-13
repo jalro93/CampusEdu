@@ -9,8 +9,9 @@ use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\TopicController;
 use Illuminate\Support\Facades\Route;
 
+// Portada pública; quien ya ha iniciado sesión va directamente a sus cursos.
 Route::get('/', function () {
-    return view('welcome');
+    return auth()->check() ? redirect()->route('courses.index') : view('welcome');
 });
 
 Route::get('/dashboard', function () {
