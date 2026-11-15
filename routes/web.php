@@ -4,6 +4,7 @@ use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EnrollmentRequestController;
 use App\Http\Controllers\LessonController;
+use App\Http\Controllers\LessonProgressController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\TopicController;
@@ -43,6 +44,12 @@ Route::middleware('auth')->group(function () {
 
     // Lecciones anidadas en el tema: cada lección solo se resuelve desde SU tema y SU curso.
     Route::resource('courses.topics.lessons', LessonController::class)->except(['index'])->scoped();
+
+    // Progreso del alumno (R06): marcar y desmarcar la lección como completada.
+    Route::post('courses/{course}/topics/{topic}/lessons/{lesson}/complete', [LessonProgressController::class, 'store'])
+        ->scopeBindings()->name('courses.topics.lessons.complete.store');
+    Route::delete('courses/{course}/topics/{topic}/lessons/{lesson}/complete', [LessonProgressController::class, 'destroy'])
+        ->scopeBindings()->name('courses.topics.lessons.complete.destroy');
 
     // Recursos de la lección: alta, descarga (autorizada) y borrado.
     Route::resource('courses.topics.lessons.resources', ResourceController::class)->only(['store', 'show', 'destroy'])->scoped();

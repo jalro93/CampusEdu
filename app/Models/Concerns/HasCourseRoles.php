@@ -4,6 +4,7 @@ namespace App\Models\Concerns;
 
 use App\Models\Course;
 use App\Models\EnrollmentRequest;
+use App\Models\Lesson;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -16,6 +17,12 @@ trait HasCourseRoles
     public function courses(): BelongsToMany
     {
         return $this->belongsToMany(Course::class)->withPivot('role')->withTimestamps();
+    }
+
+    /** Lecciones que el usuario ha marcado como completadas (R06), con la fecha en el pivote. */
+    public function completedLessons(): BelongsToMany
+    {
+        return $this->belongsToMany(Lesson::class, 'lesson_progress')->withPivot('completed_at');
     }
 
     /** Solicitudes de matrícula que ha hecho el usuario (R05). */

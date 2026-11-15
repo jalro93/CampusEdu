@@ -62,7 +62,12 @@ class CourseController extends Controller
             ? $course->enrollmentRequests()->where('status', EnrollmentRequest::PENDING)->with('user')->oldest()->get()
             : collect();
 
-        return view('courses.show', compact('course', 'role', 'teachers', 'topics', 'pendingRequests'));
+        // Lecciones completadas por el alumno (para marcarlas en la lista).
+        $completedIds = $role === 'alumno'
+            ? $request->user()->completedLessons()->pluck('lessons.id')->all()
+            : [];
+
+        return view('courses.show', compact('course', 'role', 'teachers', 'topics', 'pendingRequests', 'completedIds'));
     }
 
     public function edit(Course $course): View

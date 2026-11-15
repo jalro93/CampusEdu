@@ -14,6 +14,12 @@ class LessonPolicy
         return $user->isMemberOf($lesson->topic->course);
     }
 
+    /** Marcar como completada: solo los alumnos del curso (R06). */
+    public function complete(User $user, Lesson $lesson): bool
+    {
+        return $user->isEnrolledIn($lesson->topic->course);
+    }
+
     public function create(User $user, Topic $topic): bool
     {
         return $user->teachesCourse($topic->course);
