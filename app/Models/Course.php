@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Support\Progress;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Str;
 
 class Course extends Model
@@ -43,6 +45,27 @@ class Course extends Model
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class)->withPivot('role')->withTimestamps();
+    }
+
+    /** Todas las lecciones del curso, a través de sus temas. */
+    public function lessons(): HasManyThrough
+    {
+        return $this->hasManyThrough(Lesson::class, Topic::class);
+    }
+
+    /**
+     * Progreso de un usuario en este curso (R06F02).
+     *
+     * @return array{completed: int, total: int, percent: int}
+     */
+    public function progressFor(User $user): array
+    {
+        $total = $this->lessons()->count();
+        $completed = $user->completedLessons()
+            ->whereHas('topic', fn ($q) => $q->where('course_id', $this->id))
+            ->count();
+
+        return ['completed' => $completed, 'total' => $total, 'percent' => Progress::percent($completed, $total)];
     }
 
     public function enrollmentRequests(): HasMany

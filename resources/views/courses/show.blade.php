@@ -64,6 +64,13 @@
                 </div>
             @endif
 
+            @if ($progress)
+                <div class="mt-6 p-6 bg-white shadow-sm sm:rounded-lg">
+                    <h3 class="font-medium text-gray-900">Tu progreso</h3>
+                    <x-progress-bar class="mt-3" :percent="$progress['percent']" :completed="$progress['completed']" :total="$progress['total']" />
+                </div>
+            @endif
+
             <div class="mt-6 p-6 bg-white shadow-sm sm:rounded-lg">
                 <div class="flex items-center justify-between">
                     <h3 class="font-medium text-gray-900">Temas</h3>
