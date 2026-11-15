@@ -18,9 +18,19 @@ class CourseController extends Controller
     {
         Gate::authorize('viewAny', Course::class);
 
-        $courses = $request->user()->courses()->orderBy('title')->get();
+        $user = $request->user();
+        $courses = $user->courses()->withCount('lessons')->orderBy('title')->get();
 
-        return view('courses.index', compact('courses'));
+        // Lecciones completadas por el usuario en cada curso (una sola consulta).
+        $completedByCourse = DB::table('lesson_progress')
+            ->join('lessons', 'lessons.id', '=', 'lesson_progress.lesson_id')
+            ->join('topics', 'topics.id', '=', 'lessons.topic_id')
+            ->where('lesson_progress.user_id', $user->id)
+            ->selectRaw('topics.course_id as course_id, count(*) as completed')
+            ->groupBy('topics.course_id')
+            ->pluck('completed', 'course_id');
+
+        return view('courses.index', compact('courses', 'completedByCourse'));
     }
 
     public function create(): View
@@ -67,7 +77,10 @@ class CourseController extends Controller
             ? $request->user()->completedLessons()->pluck('lessons.id')->all()
             : [];
 
-        return view('courses.show', compact('course', 'role', 'teachers', 'topics', 'pendingRequests', 'completedIds'));
+        // Porcentaje de avance: solo tiene sentido para el alumno.
+        $progress = $role === 'alumno' ? $course->progressFor($request->user()) : null;
+
+        return view('courses.show', compact('course', 'role', 'teachers', 'topics', 'pendingRequests', 'completedIds', 'progress'));
     }
 
     public function edit(Course $course): View

@@ -25,6 +25,10 @@
                     @if ($course->description)
                         <p class="mt-1 text-sm text-gray-600">{{ \Illuminate\Support\Str::limit($course->description, 140) }}</p>
                     @endif
+                    @if ($course->pivot->role === 'alumno')
+                        @php($hechas = (int) ($completedByCourse[$course->id] ?? 0))
+                        <x-progress-bar class="mt-3" :percent="\App\Support\Progress::percent($hechas, $course->lessons_count)" :completed="$hechas" :total="$course->lessons_count" />
+                    @endif
                 </a>
             @empty
                 <div class="p-6 bg-white shadow-sm sm:rounded-lg text-gray-600">
