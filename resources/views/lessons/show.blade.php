@@ -43,6 +43,25 @@
                 @endif
             </div>
 
+            @can('complete', $lesson)
+                <div class="mt-6 p-6 bg-white shadow-sm sm:rounded-lg flex items-center justify-between gap-4">
+                    @if ($completed)
+                        <span class="text-sm font-medium text-green-700">✓ Lección completada</span>
+                        <form method="POST" action="{{ route('courses.topics.lessons.complete.destroy', [$course, $topic, $lesson]) }}">
+                            @csrf
+                            @method('DELETE')
+                            <x-secondary-button type="submit">Desmarcar</x-secondary-button>
+                        </form>
+                    @else
+                        <span class="text-sm text-gray-600">¿Has terminado esta lección?</span>
+                        <form method="POST" action="{{ route('courses.topics.lessons.complete.store', [$course, $topic, $lesson]) }}">
+                            @csrf
+                            <x-primary-button>Marcar como completada</x-primary-button>
+                        </form>
+                    @endif
+                </div>
+            @endcan
+
             <div class="mt-6 p-6 bg-white shadow-sm sm:rounded-lg" x-data="{ tipo: '{{ old('type', 'enlace') }}' }">
                 <h3 class="font-semibold text-gray-800">Recursos</h3>
 

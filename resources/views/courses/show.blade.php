@@ -106,6 +106,9 @@
                     <ul class="mt-2 ms-6 space-y-1 text-sm">
                         @foreach ($topic->lessons as $lesson)
                             <li>
+                                @if (in_array($lesson->id, $completedIds, true))
+                                    <span class="text-green-600" title="Completada" aria-label="Lección completada">✓</span>
+                                @endif
                                 <a href="{{ route('courses.topics.lessons.show', [$course, $topic, $lesson]) }}" class="text-indigo-600 hover:text-indigo-900 underline">{{ $lesson->title }}</a>
                             </li>
                         @endforeach

@@ -7,6 +7,7 @@ use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\Topic;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
@@ -34,11 +35,13 @@ class LessonController extends Controller
             ->with('status', 'Lección creada correctamente.');
     }
 
-    public function show(Course $course, Topic $topic, Lesson $lesson): View
+    public function show(Request $request, Course $course, Topic $topic, Lesson $lesson): View
     {
         Gate::authorize('view', $lesson);
 
-        return view('lessons.show', compact('course', 'topic', 'lesson'));
+        $completed = $request->user()->completedLessons()->whereKey($lesson->id)->exists();
+
+        return view('lessons.show', compact('course', 'topic', 'lesson', 'completed'));
     }
 
     public function edit(Course $course, Topic $topic, Lesson $lesson): View
