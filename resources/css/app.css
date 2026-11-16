@@ -14,3 +14,7 @@
 .contenido-leccion pre { background: #f3f4f6; padding: 0.75rem; border-radius: 0.5rem; overflow-x: auto; }
 .contenido-leccion pre code { background: transparent; padding: 0; }
 .contenido-leccion blockquote { border-left: 4px solid #d1d5db; padding-left: 1rem; color: #4b5563; }
+.contenido-leccion { overflow-wrap: anywhere; }
+.contenido-leccion img, .contenido-leccion video { max-width: 100%; height: auto; }
+.contenido-leccion table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; }
+.contenido-leccion th, .contenido-leccion td { border: 1px solid #d1d5db; padding: 0.35rem 0.6rem; text-align: left; }

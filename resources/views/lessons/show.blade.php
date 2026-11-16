@@ -1,12 +1,12 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <div>
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div class="min-w-0">
                 <p class="text-xs uppercase tracking-wide text-gray-500">{{ $course->title }} · {{ $topic->title }}</p>
-                <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ $lesson->title }}</h2>
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight break-words">{{ $lesson->title }}</h2>
             </div>
             @can('update', $lesson)
-                <div class="flex items-center gap-3">
+                <div class="flex flex-wrap items-center gap-3">
                     <a href="{{ route('courses.topics.lessons.edit', [$course, $topic, $lesson]) }}">
                         <x-secondary-button type="button">Editar</x-secondary-button>
                     </a>
@@ -21,7 +21,7 @@
         </div>
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-6 sm:py-12">
         <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
             @if (session('status'))
                 <div class="mb-4 p-4 rounded-md bg-green-50 text-sm text-green-800">{{ session('status') }}</div>
@@ -44,7 +44,7 @@
             </div>
 
             @can('complete', $lesson)
-                <div class="mt-6 p-6 bg-white shadow-sm sm:rounded-lg flex items-center justify-between gap-4">
+                <div class="mt-6 p-6 bg-white shadow-sm sm:rounded-lg flex flex-wrap items-center justify-between gap-3 sm:gap-4">
                     @if ($completed)
                         <span class="text-sm font-medium text-green-700">✓ Lección completada</span>
                         <form method="POST" action="{{ route('courses.topics.lessons.complete.destroy', [$course, $topic, $lesson]) }}">
@@ -66,11 +66,11 @@
                 <h3 class="font-semibold text-gray-800">Recursos</h3>
 
                 @forelse ($lesson->resources as $resource)
-                    <div class="mt-3 flex items-center justify-between gap-4 text-sm">
+                    <div class="mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-sm">
                         @if ($resource->isLink())
-                            <a href="{{ $resource->url }}" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:text-indigo-800 underline">{{ $resource->name }} <span class="text-gray-500">(enlace)</span></a>
+                            <a href="{{ $resource->url }}" target="_blank" rel="noopener noreferrer" class="min-w-0 break-words text-indigo-600 hover:text-indigo-800 underline">{{ $resource->name }} <span class="text-gray-500">(enlace)</span></a>
                         @else
-                            <a href="{{ route('courses.topics.lessons.resources.show', [$course, $topic, $lesson, $resource]) }}" class="text-indigo-600 hover:text-indigo-800 underline">{{ $resource->name }} <span class="text-gray-500">(archivo)</span></a>
+                            <a href="{{ route('courses.topics.lessons.resources.show', [$course, $topic, $lesson, $resource]) }}" class="min-w-0 break-words text-indigo-600 hover:text-indigo-800 underline">{{ $resource->name }} <span class="text-gray-500">(archivo)</span></a>
                         @endif
                         @can('delete', $resource)
                             <form method="POST" action="{{ route('courses.topics.lessons.resources.destroy', [$course, $topic, $lesson, $resource]) }}"
