@@ -130,7 +130,7 @@
                 @endforelse
             </div>
 
-            <a href="{{ route('courses.index') }}" class="mt-4 inline-block text-sm text-gray-600 hover:text-gray-900 underline">← Volver a mis cursos</a>
+            <a href="{{ route('courses.index') }}" class="mx-4 mt-4 inline-block text-sm text-gray-600 hover:text-gray-900 underline sm:mx-0">← Volver a mis cursos</a>
         </div>
     </div>
 </x-app-layout>
