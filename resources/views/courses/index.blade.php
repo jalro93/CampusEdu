@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
+        <div class="flex flex-wrap items-center justify-between gap-3">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Mis cursos</h2>
             <a href="{{ route('courses.create') }}">
                 <x-primary-button type="button">Nuevo curso</x-primary-button>
@@ -8,7 +8,7 @@
         </div>
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-6 sm:py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             @if (session('status'))
                 <div class="mb-4 p-4 rounded-md bg-green-50 text-sm text-green-800">{{ session('status') }}</div>
@@ -16,9 +16,9 @@
 
             @forelse ($courses as $course)
                 <a href="{{ route('courses.show', $course) }}" class="block mb-3 p-5 bg-white shadow-sm sm:rounded-lg hover:bg-gray-50">
-                    <div class="flex items-center justify-between">
-                        <span class="font-medium text-gray-900">{{ $course->title }}</span>
-                        <span class="text-xs uppercase tracking-wide px-2 py-1 rounded-full {{ $course->pivot->role === 'profesor' ? 'bg-indigo-100 text-indigo-800' : 'bg-gray-100 text-gray-700' }}">
+                    <div class="flex items-start justify-between gap-3">
+                        <span class="min-w-0 break-words font-medium text-gray-900">{{ $course->title }}</span>
+                        <span class="shrink-0 text-xs uppercase tracking-wide px-2 py-1 rounded-full {{ $course->pivot->role === 'profesor' ? 'bg-indigo-100 text-indigo-800' : 'bg-gray-100 text-gray-700' }}">
                             {{ $course->pivot->role }}
                         </span>
                     </div>

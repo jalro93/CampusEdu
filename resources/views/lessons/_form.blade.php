@@ -24,7 +24,7 @@
     </p>
 </div>
 
-<div class="mt-6 flex items-center gap-4">
+<div class="mt-6 flex flex-wrap items-center gap-4">
     <x-primary-button>{{ $submit }}</x-primary-button>
     <a href="{{ $cancel }}" class="text-sm text-gray-600 hover:text-gray-900 underline">Cancelar</a>
 </div>
