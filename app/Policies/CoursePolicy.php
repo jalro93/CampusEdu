@@ -19,7 +19,7 @@ class CoursePolicy
 
     public function create(User $user): bool
     {
-        return true; // quien crea un curso queda como profesor del mismo
+        return $user->isTeacherAccount(); // quien crea un curso queda como profesor del mismo
     }
 
     public function update(User $user, Course $course): bool

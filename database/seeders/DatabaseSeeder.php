@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $profesor = $this->usuario('Laura Profesora', 'profesor@campusedu.test');
+        $profesor = $this->usuario('Laura Profesora', 'profesor@campusedu.test', User::TYPE_TEACHER);
         $alumno = $this->usuario('Pablo Alumno', 'alumno@campusedu.test');
 
         if (Course::where('title', 'Introducción a Laravel')->exists()) {
@@ -62,12 +62,12 @@ class DatabaseSeeder extends Seeder
         ]);
     }
 
-    private function usuario(string $nombre, string $email): User
+    private function usuario(string $nombre, string $email, string $tipo = User::TYPE_STUDENT): User
     {
         $usuario = User::firstOrNew(['email' => $email]);
 
         if (! $usuario->exists) {
-            $usuario->forceFill(['name' => $nombre, 'password' => 'password', 'email_verified_at' => now()])->save();
+            $usuario->forceFill(['name' => $nombre, 'password' => 'password', 'account_type' => $tipo, 'email_verified_at' => now()])->save();
         }
 
         return $usuario;
