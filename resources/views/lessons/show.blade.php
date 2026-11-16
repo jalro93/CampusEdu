@@ -126,7 +126,7 @@
                 @endcan
             </div>
 
-            <a href="{{ route('courses.show', $course) }}" class="mt-4 inline-block text-sm text-gray-600 hover:text-gray-900 underline">← Volver al curso</a>
+            <a href="{{ route('courses.show', $course) }}" class="mx-4 mt-4 inline-block text-sm text-gray-600 hover:text-gray-900 underline sm:mx-0">← Volver al curso</a>
         </div>
     </div>
 </x-app-layout>
