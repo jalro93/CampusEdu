@@ -23,7 +23,7 @@ class R03CursosTest extends TestCase
 
     public function test_R03F01T01P01_profesor_crea_un_curso_y_aparece_en_el_listado(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->profesor()->create();
 
         $response = $this->actingAs($user)->post('/courses', [
             'title' => 'Introducción a Laravel',
@@ -37,7 +37,7 @@ class R03CursosTest extends TestCase
 
     public function test_R03F01T01P01_el_creador_queda_como_profesor_del_curso(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->profesor()->create();
 
         $this->actingAs($user)->post('/courses', ['title' => 'Bases de datos']);
 
@@ -47,7 +47,7 @@ class R03CursosTest extends TestCase
 
     public function test_R03F01T01P01_el_titulo_es_obligatorio(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->profesor()->create();
 
         $this->actingAs($user)->post('/courses', ['title' => ''])->assertSessionHasErrors('title');
         $this->assertDatabaseCount('courses', 0);
@@ -55,12 +55,52 @@ class R03CursosTest extends TestCase
 
     public function test_R03F01T01P01_dos_cursos_con_el_mismo_titulo_tienen_slug_distinto(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->profesor()->create();
 
         $this->actingAs($user)->post('/courses', ['title' => 'Programación']);
         $this->actingAs($user)->post('/courses', ['title' => 'Programación']);
 
         $this->assertSame(['programacion', 'programacion-2'], Course::orderBy('id')->pluck('slug')->all());
+    }
+
+    public function test_R03F01T02P01_un_alumno_no_puede_crear_cursos(): void
+    {
+        $alumno = User::factory()->create(); // tipo de cuenta por defecto: alumno
+
+        $this->actingAs($alumno)->get('/courses/create')->assertForbidden();
+        $this->actingAs($alumno)->post('/courses', ['title' => 'Curso no permitido'])->assertForbidden();
+        $this->assertDatabaseCount('courses', 0);
+    }
+
+    public function test_R03F01T02P01_el_boton_nuevo_curso_solo_lo_ve_un_profesor(): void
+    {
+        $this->actingAs(User::factory()->create())->get('/courses')->assertOk()->assertDontSee('Nuevo curso');
+        $this->actingAs(User::factory()->profesor()->create())->get('/courses')->assertOk()->assertSee('Nuevo curso');
+    }
+
+    public function test_R03F01T02P01_el_registro_permite_elegir_el_tipo_de_cuenta(): void
+    {
+        $this->post('/register', [
+            'name' => 'Marta Docente', 'email' => 'marta@example.com',
+            'password' => 'password', 'password_confirmation' => 'password', 'account_type' => 'profesor',
+        ]);
+        $this->assertTrue(User::where('email', 'marta@example.com')->firstOrFail()->isTeacherAccount());
+        auth()->logout();
+
+        $this->post('/register', [
+            'name' => 'Luis Alumno', 'email' => 'luis@example.com',
+            'password' => 'password', 'password_confirmation' => 'password', 'account_type' => 'alumno',
+        ]);
+        $this->assertFalse(User::where('email', 'luis@example.com')->firstOrFail()->isTeacherAccount());
+    }
+
+    public function test_R03F01T02P01_el_tipo_de_cuenta_es_obligatorio_y_valido_al_registrarse(): void
+    {
+        $datos = ['name' => 'X', 'email' => 'x@example.com', 'password' => 'password', 'password_confirmation' => 'password'];
+
+        $this->post('/register', $datos)->assertSessionHasErrors('account_type');
+        $this->post('/register', $datos + ['account_type' => 'administrador'])->assertSessionHasErrors('account_type');
+        $this->assertDatabaseCount('users', 0);
     }
 
     // ---- R03F02: modificar y eliminar cursos ----

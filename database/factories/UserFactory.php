@@ -33,6 +33,12 @@ class UserFactory extends Factory
         ];
     }
 
+    /** Cuenta de profesor: puede crear cursos. */
+    public function profesor(): static
+    {
+        return $this->state(fn (array $attributes) => ['account_type' => User::TYPE_TEACHER]);
+    }
+
     /**
      * Indicate that the model's email address should be unverified.
      */

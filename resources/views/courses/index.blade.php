@@ -2,9 +2,11 @@
     <x-slot name="header">
         <div class="flex flex-wrap items-center justify-between gap-3">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Mis cursos</h2>
-            <a href="{{ route('courses.create') }}">
-                <x-primary-button type="button">Nuevo curso</x-primary-button>
-            </a>
+            @can('create', \App\Models\Course::class)
+                <a href="{{ route('courses.create') }}">
+                    <x-primary-button type="button">Nuevo curso</x-primary-button>
+                </a>
+            @endcan
         </div>
     </x-slot>
 
@@ -32,7 +34,12 @@
                 </a>
             @empty
                 <div class="p-6 bg-white shadow-sm sm:rounded-lg text-gray-600">
-                    Todavía no participas en ningún curso. Puedes crear uno o <a href="{{ route('catalog.index') }}" class="text-indigo-600 hover:text-indigo-900 underline">solicitar matrícula en el catálogo</a>.
+                    Todavía no participas en ningún curso.
+                    @can('create', \App\Models\Course::class)
+                        Puedes crear uno o <a href="{{ route('catalog.index') }}" class="text-indigo-600 hover:text-indigo-900 underline">solicitar matrícula en el catálogo</a>.
+                    @else
+                        Puedes <a href="{{ route('catalog.index') }}" class="text-indigo-600 hover:text-indigo-900 underline">solicitar matrícula en el catálogo</a>.
+                    @endcan
                 </div>
             @endforelse
         </div>

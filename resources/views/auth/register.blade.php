@@ -16,6 +16,22 @@
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
+        <!-- Tipo de cuenta -->
+        <fieldset class="mt-4">
+            <legend class="block font-medium text-sm text-gray-700">Quiero registrarme como</legend>
+            <div class="mt-2 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-gray-700">
+                <label class="inline-flex items-center gap-2">
+                    <input type="radio" name="account_type" value="alumno" class="text-indigo-600 border-gray-300 focus:ring-indigo-500" @checked(old('account_type', 'alumno') === 'alumno')>
+                    Alumno
+                </label>
+                <label class="inline-flex items-center gap-2">
+                    <input type="radio" name="account_type" value="profesor" class="text-indigo-600 border-gray-300 focus:ring-indigo-500" @checked(old('account_type') === 'profesor')>
+                    Profesor
+                </label>
+            </div>
+            <x-input-error :messages="$errors->get('account_type')" class="mt-2" />
+        </fieldset>
+
         <!-- Password -->
         <div class="mt-4">
             <x-input-label for="password" :value="__('Password')" />
